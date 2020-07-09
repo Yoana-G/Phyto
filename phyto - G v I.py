@@ -12,86 +12,66 @@ N = N0;
 P0 = 10;     #Phytoplankton intial value
 PE = P0;
 #GP = 60;     #max growth rate (1 phyto per day) ; 0.001 - 10 "realistic range"
-#GS = 15;
-k = 0.05;    #half-saturation parameter (starting w/half of 10) ; 0.01 - 5 "realistic range"
-K = 0.05;     # light decay 
-I_0 = 1000;  #light intensity (I/I_o)
-m = 0.01;     #mortality rate ("slow") ; << G_max
-mPS = 0.01;   #"quadratic mortality" is an option
-z = np.linspace(-200, 0, 2000)
-
-I = I_0*np.exp(K*z) 
-
-ntime = np.arange(10000)   # of timesteps; create time array of 1000 components
+#k = 0.001; #0.05   #half-saturation parameter (starting w/half of 10) ; 0.01 - 5 "realistic range"
+kpar = 0.05;     # light decay 
+I_0 = 1;  #light intensity (I/I_o)
+m = 0.1;  #0.01   #mortality rate ("slow") ; << G_max
+mPS = 0.1;   #"quadratic mortality" is an option
+z = np.linspace(-250, 0, 15)
+#z = np.linspace(-200, 0, 2000)
+I = I_0*np.exp(kpar*z) 
+# np.arange(10000)
+ntime = np.arange(10)   # of timesteps; create time array of 1000 components
 dt = 0.01          # time step of (1 day) 
-days = dt*np.arange(10000)   #outputs number of days; multiplies 'ntime*dt'
-#I = np.arange(0, 2, 0.01) 
+days = dt*np.arange(10)   #outputs number of days; multiplies 'ntime*dt'
+#days = dt*np.arange(10000)
+
+k_PS = 0.25;  #half-saturation parameter; 0.01 - 5 "realistic range" (0.05)
+k_PE = 0.5;
+
+
+L_PE = np.linspace(250, 50, 15)
+L_PS = L_PE
+
 
 ##### Depth v Phyto Growth #####
-fig, ax = plt.subplots()
-for L_PE in [200, 50, 15]:
-    GP = 60;    #60
-    GS = 15;    #15
+fig1, ax = plt.subplots()
+for L_PE in [250, 50, 5]:
+    GP = 2.8;    #60
+    GS = 1.5;    #15
     L_PS = L_PE
     G_PE = GP*(1-np.exp(-L_PE*I/I_0))
     G_PS = GS*(1-np.exp(-L_PS*I/I_0))
-    N_PS = ((mPS/G_PS)*k)/(1 - (mPS/G_PS))
-    N_PE = ((m/G_PE)*k)/(1 - (m/G_PE))
+    N_PS = ((mPS/G_PS)*k_PS)/(1 - (mPS/G_PS))
+    N_PE = ((m/G_PE)*k_PE)/(1 - (m/G_PE))
     line1, = ax.plot(N_PE, z, dashes=[6, 2], label='L_PE=' +str(L_PE))
     line2, = ax.plot(N_PS, z, dashes=[6, 2], label='L_PS=' +str(L_PS))
     
 
-ax.set_xlim((0, 0.0005))    # setting the x axis limits to 10^-4
+ax.set_xlim((0, 4))    # setting the x axis limits to 10^-4
+#ax.set_xlim((0, 0.0005)) 
 ax.legend()
 
 plt.xlabel('N* (at equilibrium)')
 plt.ylabel('Depth (z)')
 
 
-##### Depth v Phyto Growth (different Growth rate values) #####
-fig, ax = plt.subplots()
-for L_PE in [200, 50, 15]:  # creating a 'for loop' with  range 
-    GP = 30;    #10, 10, 20, 30
-    GS = 45;    #25, 40, 60, 45
-    L_PS = L_PE
-    G_PE = GP*(1-np.exp(-L_PE*I/I_0))
-    G_PS = GS*(1-np.exp(-L_PS*I/I_0))
-    N_PS = ((mPS/G_PS)*k)/(1 - (mPS/G_PS))
-    N_PE = ((m/G_PE)*k)/(1 - (m/G_PE))
-    line1, = ax.plot(N_PE, z, dashes=[6, 2], label= 'L_PE=' +str(L_PE))
-    line2, = ax.plot(N_PS, z, dashes=[6, 2], label='L_PS=' +str(L_PS))
-
-# 0.0005, 0.0008
-ax.set_xlim((0, 0.0005))    # setting the x axis limits to 10^-4
-ax.legend()
-
-plt.xlabel('N* (at equilibrium)')
-plt.ylabel('Depth (z)')
-
-'''
-fig, ax = plt.subplots()
-
-line1, = ax.plot(G_PE, I, label='Picoeukaryotes (PE)')
-line1.set_dashes([2, 2, 10, 2])   # 2pt line, 2pt break, 10pt line, 2pt break
-line2, = ax.plot(G_PS, I, dashes=[6, 2], label='Synechococcus (PS)')
-
-ax.legend()
-#plt.plot(G_PE, I)
-plt.xlabel('Growth rate of Phytoplankton')
-plt.ylabel('Light intensity(I)')
-#plt.plot(G_PS, I)
-
-fig, ax = plt.subplots()
+fig2, ax = plt.subplots()
 
 line1, = ax.plot(G_PE, z, label='Picoeukaryotes (PE)')
-line1.set_dashes([2, 2, 10, 2])   # 2pt line, 2pt break, 10pt line, 2pt break
-line2, = ax.plot(G_PS, z, dashes=[6, 2], label='Synechococcus (PS)')
+#line1.set_dashes([2, 2, 10, 2])   # 2pt line, 2pt break, 10pt line, 2pt break
+line2, = ax.plot(N_PE, z, label='N*_PE')
+#line2, = ax.plot(G_PS, z, dashes=[6, 2], label='Synechococcus (PS)')
+line3, = ax.plot(N_PS, z, label='N*_PS')
 
+ax.set_xlim((0, 1))
 ax.legend()
 #plt.plot(G_PE, I)
-plt.xlabel('Growth rate of Phytoplankton')
+plt.xlabel('Nutrients and Phytoplankton')
+#plt.xlabel('Growth rate of Phytoplankton')
 plt.ylabel('Depth(z)')
-'''
+
+
 ############## Light intensity (I) v. L_PE ################
 '''
 L_PE = 200;
