@@ -26,7 +26,7 @@ mPS = 0.1; #"quadratic mortality" is an option
 
 z = np.linspace(0,-H,K) # z array
 I = I_0*np.exp(kpar*z) #light profile (light decays exponentially)
-kappa = 0.0001 * 86400 # diffusivity value (10^-4 m^2 * s^-1); 86400 secs/day; kappa = 0.0001
+kappa = 0.001 * 86400 # diffusivity value (10^-4 m^2 * s^-1); 86400 secs/day; kappa = 0.0001
 dz = H/(K-1); # calculate z spacing
 N0 = 22; # bottom boundary condition on nutrient
 N = (N0-2)*np.ones(z.shape) # initial condition
@@ -99,8 +99,8 @@ line2, = ax.plot(PEsave[-1,:], z, label='Picoeukaryotes (PE)')
 line3, = ax.plot(PSsave[-1,:], z, label='Synechococcus (PS)')
 
 ax.legend()
-plt.xlabel('N')
-plt.ylabel('z(m)')
+plt.xlabel('N (µMol/m^3)')
+plt.ylabel('z (meters)')
 
 
 fig2, ax = plt.subplots()
@@ -118,5 +118,5 @@ line5, = ax.plot(tsave[:,0], PSsave[:,0], label='Synechococcus (PS)')
 #line6, = ax.plot(time, PSsave[:,-1], label='PS (at H)')
 
 ax.legend()
-plt.xlabel('time')
-plt.ylabel('N')
+plt.xlabel('time (day^-1)')
+plt.ylabel('N (µMol/m^3)')
