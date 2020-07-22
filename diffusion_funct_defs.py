@@ -29,13 +29,13 @@ def diffusion_time_stepping(kappa,dz,dt,N0,N):
     Nj = d*Njp1+(1-2*d)*Nj+d*Njm1   #second derivative
     return Nj
 
-def sinking_time_stepping(dz,N0,PE):
+def sinking_time_stepping(dz,PE0,PE):
     PEj = PE
     d = 1 / dz
     
     # Compute arrays for sinking velocity
     #PEjp1 = np.append(PEj[1:],PE0) # Dirichlet boundary condition (fixed value)
-    PEjp1 = np.append(PEj[0],PEj[:-1])
+    PEjp1 = np.append(PEj[1:],PE0)
     #Njm1 = np.append(Nj[0],Nj[:-1]) # Neumann boundary condition (no-flux)
     
     # Time stepping
