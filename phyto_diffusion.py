@@ -49,7 +49,7 @@ time = np.arange(nt+1)*dt   #won't work bc it saves each time
 t_val = np.zeros(z.shape)
 tsave = [t_val]
 W = 1; #sinking rate
-#PE0 = 0; # bottom boundary condition for phytoplankton ??
+PE0 = 0; # bottom boundary condition for phytoplankton ??
 
 for t in np.arange(nt): #for loop: iterate in time, run specified # of times (nt)
 
@@ -60,7 +60,7 @@ for t in np.arange(nt): #for loop: iterate in time, run specified # of times (nt
     
     dPR_dt= PR*(GR*(1-np.exp(-L_PR*I))*(N/(k_PR+N)) - mPR)   #produces time scale to reach equilibrium
     
-    dPE_dz = sinking_time_stepping(dz,N0,PE)
+    dPE_dz = sinking_time_stepping(dz,PE0,PE)
     #d*PEj-d*PEjm1
         
     dPE_dt = PE*(GE*(1-np.exp(-L_PE*I))*(N/(k_PE+N)) - mPE - W*dPE_dz)
