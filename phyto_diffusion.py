@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt        #import plotting library
 from diffusion_funct_defs import diffusion_time_stepping  #import all files in the same folder called 'diffusion func defs'
 from diffusion_funct_defs import sinking_time_stepping
+from diffusion_funct_defs import diffusion2_time_stepping
 
 #all PE --> PS  AND all PS --> PR
 
@@ -17,15 +18,15 @@ K = 100; # number of grid points (#20)
 kpar = 0.05; #0.001 interesting results ; # light decay 
 GS = 5;  #5 #max growth rate (1 phyto per day) ; 0.001 - 10 "realistic range"
 GR = 1.5; #1.5
-GE = 3;
+GE = 5;
 I_0 = 1;   #light intensity (I/I_o); constant (doesn't vary w/season); Watts*m^-2 (light flux)
 L_PS = 5; #gamma;light dependence =>determines Growth rate sensitivity to light levels (0.01)
 L_PR = 250; #unitless (it's in the exponential) / (0.001)
-L_PE = 10;
+L_PE = 5;
 #k = 0.5;  #nutrient units (micromolar)
 k_PR = 0.25;  #half-saturation parameter; 0.01 - 5 "realistic range" (0.05)
 k_PS = 0.5;  #larger (m^2 / s); =0.01 ///// (0.001)
-k_PE = 0.15;
+k_PE = 0.5;
 mPS = 0.1; #mortality rate ("slow") = day^-1 ; << G_max
 mPR = 0.1; #"quadratic mortality" is an option
 mPE = 0.1;
@@ -43,13 +44,14 @@ PSsave = [PS] #saving initial condition
 PRsave = [PR]
 PEsave = [PE]
 Nsave = [N] # save initial condition
-dt = 0.01 # time step
+dt = 0.001 # time step
 nt = 100000 # number of time steps 
 time = np.arange(nt+1)*dt   #won't work bc it saves each time
 t_val = np.zeros(z.shape)
 tsave = [t_val]
-W = 1; #sinking rate
+W = 0.1; #sinking rate
 PE0 = 0; # bottom boundary condition for phytoplankton ??
+
 
 for t in np.arange(nt): #for loop: iterate in time, run specified # of times (nt)
 
@@ -64,7 +66,7 @@ for t in np.arange(nt): #for loop: iterate in time, run specified # of times (nt
     #d*PEj-d*PEjm1
         
     dPE_dt = PE*(GE*(1-np.exp(-L_PE*I))*(N/(k_PE+N)) - mPE - W*dPE_dz)
-    
+    # sinking term --> W*dPE_dz
     
     N = N + dN_dt*dt      #forward in time (explicit method) - Euler's method
     PS = PS + dPS_dt*dt
@@ -76,9 +78,10 @@ for t in np.arange(nt): #for loop: iterate in time, run specified # of times (nt
     N = diffusion_time_stepping(kappa,dz,dt,N0,N) 
     PS = diffusion_time_stepping(kappa,dz,dt,0,PS)
     PR = diffusion_time_stepping(kappa,dz,dt,0,PR)
-    PE = diffusion_time_stepping(kappa, dz, dt, 0, PE)
+    #PE = diffusion_time_stepping(kappa, dz, dt, 0, PE)
+    PE = diffusion2_time_stepping(kappa,dz,dt,PE0,PE)
 
-    if np.mod(t,100) == 0:   #save every 10 time steps 
+    if np.mod(t,1000) == 0:   #save every 10 time steps 
         Nsave = np.concatenate((Nsave,[N]),axis = 0)
         PSsave = np.concatenate((PSsave,[PS]),axis = 0) #adding [PE] to the matrix, starting w/initial value 
                                                         # axis tells dimension; zero = rows
