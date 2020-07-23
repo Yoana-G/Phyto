@@ -14,8 +14,8 @@ from diffusion_funct_defs import diffusion2_time_stepping
 
 # H = -1000
 H = 1000; # depth of water (1 = non-dimensional)
-K = 100; # number of grid points (#20)
-kpar = 0.05; #0.001 interesting results ; # light decay 
+K = 1000; # number of grid points (#20)
+kpar = 0.05; # light decay 
 GS = 5;  #5 #max growth rate (1 phyto per day) ; 0.001 - 10 "realistic range"
 GR = 1.5; #1.5
 GE = 5;
@@ -49,7 +49,7 @@ nt = 100000 # number of time steps
 time = np.arange(nt+1)*dt   #won't work bc it saves each time
 t_val = np.zeros(z.shape)
 tsave = [t_val]
-W = 0.1; #sinking rate
+W = 0.001; #sinking rate
 PE0 = 0; # bottom boundary condition for phytoplankton ??
 
 
@@ -79,9 +79,9 @@ for t in np.arange(nt): #for loop: iterate in time, run specified # of times (nt
     PS = diffusion_time_stepping(kappa,dz,dt,0,PS)
     PR = diffusion_time_stepping(kappa,dz,dt,0,PR)
     #PE = diffusion_time_stepping(kappa, dz, dt, 0, PE)
-    PE = diffusion2_time_stepping(kappa,dz,dt,PE0,PE)
+    PE = diffusion2_time_stepping(kappa,dz,dt,PE0,W,PE)
 
-    if np.mod(t,1000) == 0:   #save every 10 time steps 
+    if np.mod(t,10000) == 0:   #save every 10 time steps 
         Nsave = np.concatenate((Nsave,[N]),axis = 0)
         PSsave = np.concatenate((PSsave,[PS]),axis = 0) #adding [PE] to the matrix, starting w/initial value 
                                                         # axis tells dimension; zero = rows
