@@ -33,7 +33,7 @@ mPE = 0.1;
 
 z = np.linspace(0,-H,K) # z array
 I = I_0*np.exp(kpar*z) #light profile (light decays exponentially)
-kappa = 0.0001 * 86400 # diffusivity value (m^2 * s^-1); 86400 secs/day; kappa = 0.0001
+kappa = 0.001 * 86400 # diffusivity value (m^2 * s^-1); 86400 secs/day; kappa = 0.0001
 dz = H/(K-1); # calculate z spacing
 N0 = 22; # bottom boundary condition on nutrient
 N = (N0-2)*np.ones(z.shape) # initial condition
@@ -49,7 +49,7 @@ nt = 100000 # number of time steps
 time = np.arange(nt+1)*dt   #won't work bc it saves each time
 t_val = np.zeros(z.shape)
 tsave = [t_val]
-W = 0.001; #sinking rate
+W = 0.0001; #sinking rate
 PE0 = 0; # bottom boundary condition for phytoplankton ??
 
 
@@ -81,7 +81,7 @@ for t in np.arange(nt): #for loop: iterate in time, run specified # of times (nt
     #PE = diffusion_time_stepping(kappa, dz, dt, 0, PE)
     PE = diffusion2_time_stepping(kappa,dz,dt,PE0,W,PE)
 
-    if np.mod(t,10000) == 0:   #save every 10 time steps 
+    if np.mod(t,1000) == 0:   #save every 10 time steps 
         Nsave = np.concatenate((Nsave,[N]),axis = 0)
         PSsave = np.concatenate((PSsave,[PS]),axis = 0) #adding [PE] to the matrix, starting w/initial value 
                                                         # axis tells dimension; zero = rows
