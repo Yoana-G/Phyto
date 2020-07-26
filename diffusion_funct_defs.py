@@ -36,7 +36,7 @@ def diffusion2_time_stepping(kappa,dz,dt,PE0,W,PE):
    
     # Compute arrays for diffusion
     PEjp1 = np.append(PEj[1:],PE0) # Dirichlet boundary condition (fixed value)
-    PEjm1 = np.append(PEj[0]/(1+W*kappa/dz),PEj[:-1]) # Neumann boundary condition (no-flux)
+    PEjm1 = np.append(PEj[0]/(1+W/(dz*kappa)),PEj[:-1]) # Neumann boundary condition (no-flux)
     
     # Time stepping
         # the minus 2 comes from the stepping process
@@ -56,7 +56,7 @@ def sinking_time_stepping(dz,PE0,PE):
     #Njm1 = np.append(Nj[0],Nj[:-1]) # Neumann boundary condition (no-flux)
     
     # Time stepping
-    #Nj = d*Njp1+(1-2*d)*Nj+d*Njm1   #second derivative
-    PEj = d*PEjp1-d*PEj
+    #PEj = d*PEjp1+(1-2*d)*PEj #+d*PEjm1   #second derivative
+    PEj = d*PEjp1-d*PEj  
     return PEj
 
