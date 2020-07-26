@@ -49,7 +49,7 @@ nt = 100000 # number of time steps
 time = np.arange(nt+1)*dt   #won't work bc it saves each time
 t_val = np.zeros(z.shape)
 tsave = [t_val]
-W = 0.0001; #sinking rate
+W = 1; #sinking rate
 PE0 = 0; # bottom boundary condition for phytoplankton ??
 
 
