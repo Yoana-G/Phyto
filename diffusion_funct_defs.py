@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
-
 def diffusion_time_stepping(kappa,dz,dt,N0,N):
     '''Solve diffusion equation in 1D using forward Euler time stepping
     
@@ -43,7 +42,6 @@ def diffusion2_time_stepping(kappa,dz,dt,PE0,W,PE):
         # the 1 comes from explicit method (Euler's)
     PEj = d*PEjp1+(1-2*d)*PEj+d*PEjm1   #second derivative
     return PEj
-
 # kappa(dPE_dz) = W*PE_j
 
 def sinking_time_stepping(dz,PE0,PE):
@@ -52,8 +50,7 @@ def sinking_time_stepping(dz,PE0,PE):
     
     # Compute arrays for sinking velocity
     #PEjp1 = np.append(PEj[1:],PE0) # Dirichlet boundary condition (fixed value)
-    PEjp1 = np.append(PEj[1:],PE0)
-    #Njm1 = np.append(Nj[0],Nj[:-1]) # Neumann boundary condition (no-flux)
+    PEjp1 = np.append(PEj[1:],PE0) # bottom boundary condition
     
     # Time stepping
     #PEj = d*PEjp1+(1-2*d)*PEj #+d*PEjm1   #second derivative
